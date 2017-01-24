@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="aws-sdk-2.7.14.min.js"></script>
+    <script id="facebook-jssdk" src="https://connect.facebook.net/en_US/all.js"></script>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="alertify/themes/alertify.core.css" />
+    <link rel="stylesheet" href="alertify/themes/alertify.default.css" />
+     <link rel="stylesheet" href="alertify/themes/alertify.bootstrap.css" />
+    
+    <meta charset="UTF-8">
+    <title>Automatic Stock Notification</title>
+    <style type="text/css">
+.form-style-1 {
+    margin:10px auto;
+    max-width: 400px;
+    padding: 20px 12px 10px 20px;
+    font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+.form-style-1 li {
+    padding: 0;
+    display: block;
+    list-style: none;
+    margin: 10px 0 0 0;
+}
+.form-style-1 label{
+    margin:0 0 3px 0;
+    padding:0px;
+    display:block;
+    font-weight: bold;
+}
+.form-style-1 input[type=text], 
+.form-style-1 input[type=date],
+.form-style-1 input[type=datetime],
+.form-style-1 input[type=number],
+.form-style-1 input[type=search],
+.form-style-1 input[type=time],
+.form-style-1 input[type=url],
+.form-style-1 input[type=email],
+textarea, 
+select{
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border:1px solid #BEBEBE;
+    padding: 7px;
+    margin:0px;
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;  
+}
+.form-style-1 input[type=text]:focus, 
+.form-style-1 input[type=date]:focus,
+.form-style-1 input[type=datetime]:focus,
+.form-style-1 input[type=number]:focus,
+.form-style-1 input[type=search]:focus,
+.form-style-1 input[type=time]:focus,
+.form-style-1 input[type=url]:focus,
+.form-style-1 input[type=email]:focus,
+.form-style-1 textarea:focus, 
+.form-style-1 select:focus{
+    -moz-box-shadow: 0 0 8px #88D5E9;
+    -webkit-box-shadow: 0 0 8px #88D5E9;
+    box-shadow: 0 0 8px #88D5E9;
+    border: 1px solid #88D5E9;
+}
+.form-style-1 .field-divided{
+    width: 49%;
+}
+
+.form-style-1 .field-long{
+    width: 100%;
+}
+.form-style-1 .field-select{
+    width: 100%;
+}
+.form-style-1 .field-textarea{
+    height: 100px;
+}
+.form-style-1 input[type=submit], .form-style-1 input[type=button]{
+    background: #4B99AD;
+    padding: 8px 15px 8px 15px;
+    border: none;
+    color: #fff;
+}
+.form-style-1 input[type=submit]:hover, .form-style-1 input[type=button]:hover{
+    background: #4691A4;
+    box-shadow:none;
+    -moz-box-shadow:none;
+    -webkit-box-shadow:none;
+}
+.form-style-1 .required{
+    color:red;
+}
+    
+.left
+    {
+        position: relative;
+        
+    }
+</style>
+    </head>
+
+<body>
+  
+<!--Body ----------------------------------------------------------------------------------------------------------------->    
+    
+     
+    <h3 align="center">Automatic Stock Notification</h3>
+   
+    
+    
+  <form>
+    <ul class="form-style-1">
+    <li>
+        <label>Stock Search</label>
+        <div align="right"> 
+        <a href="index.html">
+          <span class="glyphicon glyphicon-refresh"></span>
+        </a>
+        </div>
+        <input type="text" id="stock_name" name="field3" class="field-long" />
+    </li>
+        
+    <h5 align="center"> Search By Stock Name, Symbol, Market or Industry!</h5>
+    </ul>
+  </form>
+  
+  <div align="center">      
+         <button id="search"> Search! </button>
+  </div>
+      
+ <form method="GET" action="index1.html">   
+ <ul class="form-style-1">
+    <li>
+        <select id="selectbox" name="field4" class="field-select">
+        <option> Search Results</option>
+        </select> 
+    </li>
+    
+    <div align="center">   
+    <li>
+       <input type="submit" value="submit">   
+    </li>
+    </div>
+</ul>    
+</form>
+
+<!--front end scripts--------------------------------------------------------------------------------->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+    $(document).ready(function()
+        { $("p").hide();}
+                      
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"> </script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css"
+        rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <link href="http://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/css/bootstrap-multiselect.css"
+        rel="stylesheet" type="text/css" />
+    <script src="http://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/js/bootstrap-multiselect.js"
+        type="text/javascript"></script>
+    <script type="text/javascript">
+    </script>
+    
+    
+<!--Search related Scripts------------------------------------------------------------------------------------------------------->
+    
+    <script type="text/javascript">        
+    document.getElementById('search').onclick = function () 
+    
+    { 
+        var tmp= document.getElementById("stock_name").value;  /*GET Request to AWS Cloud Search Domain*/
+        var xhttp = new XMLHttpRequest();
+        var search_string="https://search-searchstock-clbc3heda3hzppp4e4ppr7fqxy.us-west-2.cloudsearch.amazonaws.com/2013-01-01/search?q="+tmp+"&q.options={fields: ['name','market','sector','industry','symbol']}";
+        xhttp.open("GET", search_string, true);
+        xhttp.send();
+        
+        xhttp.onreadystatechange = function()  /*JSON Parsing*/
+        {
+            if (this.readyState == 4 && this.status == 200) 
+            {
+                var str=this.responseText;
+                var str1 = '';
+                for (var i = 0; i < str.length; i++) 
+                {
+                    if (str[i] >= 'A' && str[i] <= 'Z' ||str[i] >= 'a' && str[i] <= 'z') 
+                        str1 += str[i];
+                }
+                
+                var str2=str1.split("idStockListingscsvfields");
+                var pos =0;
+                var pos1 =0;
+                var name=[];
+                var x = document.getElementById("selectbox");
+                
+                for (var j=1; j< str2.length; j++)
+                {
+                    pos=str2[j].search("name");
+                    pos1=str2[j].search("industry");
+                    name[j]=str2[j].substring(pos+4, pos1);
+                    var option = document.createElement("option");
+                    option.text = name[j];
+                    x.add(option);
+                }
+            }
+        };
+    }
+    
+</script>
+</body>
+</html>

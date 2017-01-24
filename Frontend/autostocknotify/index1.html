@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.18.min.js"></script>
+    <script id="facebook-jssdk" src="https://connect.facebook.net/en_US/all.js"></script>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="alertify/themes/alertify.core.css" />
+    <link rel="stylesheet" href="alertify/themes/alertify.default.css" />
+    
+    
+    <meta charset="UTF-8">
+    <title>Automatic Stock Notification</title>
+    
+<!--CSS--------------------------------------------------------------------------------------------------------------->
+<style type="text/css">
+.form-style-1 {
+    margin:10px auto;
+    max-width: 400px;
+    padding: 20px 12px 10px 20px;
+    font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+.form-style-1 li {
+    padding: 0;
+    display: block;
+    list-style: none;
+    margin: 10px 0 0 0;
+}
+.form-style-1 label{
+    margin:0 0 3px 0;
+    padding:0px;
+    display:block;
+    font-weight: bold;
+}
+.form-style-1 input[type=text], 
+.form-style-1 input[type=date],
+.form-style-1 input[type=datetime],
+.form-style-1 input[type=number],
+.form-style-1 input[type=search],
+.form-style-1 input[type=time],
+.form-style-1 input[type=url],
+.form-style-1 input[type=email],
+textarea, 
+select{
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border:1px solid #BEBEBE;
+    padding: 7px;
+    margin:0px;
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;  
+}
+.form-style-1 input[type=text]:focus, 
+.form-style-1 input[type=date]:focus,
+.form-style-1 input[type=datetime]:focus,
+.form-style-1 input[type=number]:focus,
+.form-style-1 input[type=search]:focus,
+.form-style-1 input[type=time]:focus,
+.form-style-1 input[type=url]:focus,
+.form-style-1 input[type=email]:focus,
+.form-style-1 textarea:focus, 
+.form-style-1 select:focus{
+    -moz-box-shadow: 0 0 8px #88D5E9;
+    -webkit-box-shadow: 0 0 8px #88D5E9;
+    box-shadow: 0 0 8px #88D5E9;
+    border: 1px solid #88D5E9;
+}
+.form-style-1 .field-divided{
+    width: 49%;
+}
+
+.form-style-1 .field-long{
+    width: 100%;
+}
+.form-style-1 .field-select{
+    width: 100%;
+}
+.form-style-1 .field-textarea{
+    height: 100px;
+}
+.form-style-1 input[type=submit], .form-style-1 input[type=button]{
+    background: #4B99AD;
+    padding: 8px 15px 8px 15px;
+    border: none;
+    color: #fff;
+}
+.form-style-1 input[type=submit]:hover, .form-style-1 input[type=button]:hover{
+    background: #4691A4;
+    box-shadow:none;
+    -moz-box-shadow:none;
+    -webkit-box-shadow:none;
+}
+.form-style-1 .required{
+    color:red;
+}
+    
+.left
+    {
+        position: relative;
+        
+    }
+</style>
+</head>
+<body>
+  
+<!--Body ----------------------------------------------------------------------------------------------------------------->    
+    
+ <div id="fb-root"></div>
+
+ <h3 align="center">Automatic Stock Notification</h3>
+ <br>
+
+<form>
+<ul class="form-style-1">
+    <li><label>User Name <span class="required">*</span></label><input id ="username" type="text" name="field1" class="field-divided" placeholder="First" />
+    </li>
+        
+    <li>
+        <label>Email <span class="required">*</span></label>
+        <input type="email" id="emailid" name="field3" class="field-long" />
+    </li>
+        
+    <li>
+        <label>Select Stock</label>
+        <select id="stock1" name="field4" class="field-select">
+        <option selected="selected">Selected Stock</option>
+        </select>
+    </li>
+    
+    <li>
+        <label>Select Market</label>
+        <select id="market1" name="field4" class="field-select">
+        <option selected="selected">None Selected</option>
+        <option>NASDAQ</option>
+        <option >NYSE</option>
+        <option >AMEX</option>
+        </select>
+    </li>
+        
+    <li>
+        <label>Set Threshold <span class="required">*</span></label>
+        <input type="number" id="threshold1" name="field3" class="field-long" />
+    </li>   
+    
+    <br>
+    
+</ul>
+</form>
+    
+    <br>
+    
+    <div align="center">
+    <button id="login" align="center" >Login with Facebook</button>
+    </div>
+    
+    <p align="center">
+    <button id="putThis">Submit</button> 
+    </p>
+    
+    
+    
+<!-- Front End script---------------------------------------------------------------------------------->
+    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+    $(document).ready(function()
+    { $("p").hide();}
+    </script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"> </script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css"
+        rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <link href="http://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/css/bootstrap-multiselect.css"
+        rel="stylesheet" type="text/css" />
+    <script src="http://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/js/bootstrap-multiselect.js"
+        type="text/javascript"></script>
+    <script type="text/javascript">
+    
+        var res=window.location.search;  /*Receiving Data from Stock Search Page*/
+        var res1="";
+        var pos=0;
+        var x = document.getElementById("stock1");
+        pos=res.search("=");
+        res1=res.substring(pos+1, res.length);
+        var option = document.createElement("option");
+        option.text = res1;
+        x.add(option);
+    </script>
+       
+    
+<!-- AWS Scripts------------------------------------------------------------------------------------------------------->
+    
+    <script type="text/javascript">
+        var fbUserId;
+        var params;
+        var keyText;
+        var attText;
+        var valText;
+        var dynamodb = null;
+        var docClient = null;
+        var appId = '612068902314095'; //from facebook
+        var roleArn = 'arn:aws:iam::433603958356:role/role_dynamodb'; //from AWS IAM
+        var resultData = null;
+                
+    document.getElementById('putThis').onclick = function () {
+    
+    AWS.config = new AWS.Config();
+    AWS.config.region = 'us-west-2';
+    AWS.config.accessKeyId = "AKIAJKFOYQBMFDQZFBCA";
+    AWS.config.secretAccessKey = "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";
+    dynamodb = new AWS.DynamoDB({ region: 'us-west-2' });
+    docClient = new AWS.DynamoDB.DocumentClient({ service: dynamodb });
+    username = document.getElementById("username").value;
+    emailid = document.getElementById("emailid").value;
+    stock1= document.getElementById("stock1").value;    
+    market1= document.getElementById("market1").value;
+    threshold1= document.getElementById("threshold1").value;    
+        
+        
+    params = {
+        TableName: 'Stock_Profiles',
+        Item: {
+            username: username,
+            emailid: emailid, 
+            stock1 : stock1,
+            market1: market1,
+            threshold1: threshold1
+              }
+            };
+        
+    
+    docClient.put(params, function(err, data)
+        {
+            if (err) console.log(err);
+            else
+            {
+                resultData = data;
+                console.log(resultData);
+            }
+    })
+
+    
+      
+      alertify.alert("Congratulations! You are now using Auto Stock Notify! ");
+     
+      
+      
+    
+    };
+        
+    
+     
+    
+        
+/*FB Script--------------------------------------------------------------------------------------------------------------------*/               
+        
+window.fbAsyncInit = function() {
+    
+    $("p").hide();
+    FB.init({ appId: appId, cookie: true,xfbml: true,version: 'v2.8' });
+    document.getElementById('login').onclick = function () {
+        FB.login(function (response) {
+            if (response.authResponse) {
+                AWS.config.credentials = new AWS.WebIdentityCredentials({       //Web Federated Identity
+                    RoleArn: roleArn,
+                    ProviderId: 'graph.facebook.com',
+                    WebIdentityToken: response.authResponse.accessToken
+                   
+                });
+           $("p").show();
+            }
+            else 
+            {
+                console.log("Issue logging in");
+                $("p").hide();
+                
+            }
+            // Load the FB JS SDK asynchronously
+            (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) { return; }
+                js = d.createElement(s); js.id = id;
+                js.src = "https://connect.facebook.net/en_US/all.js";
+                fjs.parentNode.insertBefore(js, fjs);
+               
+            }(document, 'script', 'facebook-jssdk'));
+        })
+    }
+}
+    
+</script>
+    
+    
+<script language="JavaScript">
+
+    function processForm()
+    {
+        var parameters=location.search.substring(1).split("&");
+        var temp=parameters[0].split("");
+        l=unescape(temp[1]);
+        document.getElementById("data").innerHTML=l;
+        
+    }
+    
+    processForm();
+    
+</script>    
+
+    
+<script src="alertify/lib/alertify.min.js"></script>   
+    
+    
+  	   
+</body>
+</html>
